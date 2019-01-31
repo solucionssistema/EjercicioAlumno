@@ -28,32 +28,41 @@ public class Carrera{
 	public int getCodigoCarrera() {
 		return codigoCarrera.get();
 	}
+	
 	public void setCodigoCarrera(int codigoCarrera) {
 		this.codigoCarrera = new SimpleIntegerProperty(codigoCarrera);
 	}
+	
 	public IntegerProperty CodigoCarreraProperty() {
 		return codigoCarrera;
 	}
+	
 	//Metodos atributo: nombreCarrera
 	public String getNombreCarrera() {
 		return nombreCarrera.get();
 	}
+	
 	public void setNombreCarrera(String nombreCarrera) {
 		this.nombreCarrera = new SimpleStringProperty(nombreCarrera);
 	}
+	
 	public StringProperty NombreCarreraProperty() {
 		return nombreCarrera;
 	}
+	
 	//Metodos atributo: cantidadAsignaturas
 	public int getCantidadAsignaturas() {
 		return cantidadAsignaturas.get();
 	}
+	
 	public void setCantidadAsignaturas(int cantidadAsignaturas) {
 		this.cantidadAsignaturas = new SimpleIntegerProperty(cantidadAsignaturas);
 	}
+	
 	public IntegerProperty CantidadAsignaturasProperty() {
 		return cantidadAsignaturas;
 	}
+	
 	public static void llenarInformacion(Connection connection, ObservableList<Carrera> lista){
 		try {
 			Statement statement = connection.createStatement();
@@ -67,4 +76,10 @@ public class Carrera{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return nombreCarrera.get()+" ("+cantidadAsignaturas.get()+")";
+	}
+	
 }

@@ -100,8 +100,8 @@
                               <Insets bottom="5.0" top="5.0" />
                            </GridPane.margin>
                         </TextArea>
-                        <ComboBox prefHeight="26.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <ComboBox prefHeight="26.0" prefWidth="193.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <ComboBox fx:id="cmbCarrera" prefHeight="26.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <ComboBox fx:id="cmbCentroEstudio" prefHeight="26.0" prefWidth="193.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                         <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <HBox minWidth="-Infinity" prefHeight="44.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>

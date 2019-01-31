@@ -55,4 +55,9 @@ public class CentroEstudio{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return nombreCentro.get();
+	}
 }
