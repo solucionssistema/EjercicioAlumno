@@ -2,9 +2,12 @@ package modelo;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import javax.swing.JOptionPane;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -107,20 +110,72 @@ CentroEstudio centroEstudio, Carrera carrera) {
 		this.carrera = carrera;
 	}
 	
-	public void guardarRegistro() {
+	public int guardarRegistro(Connection connection) {
+		try {
+			PreparedStatement instruccion = connection.prepareStatement("INSERT INTO tbl_alumnos(nombre, apellido, edad, genero, fecha_ingreso,codigo_carrera, codigo_centro) VALUES ( ?, ?, ?, ?, ?, ?, ?)");
+			
+			//Elementos parametrizados
+			instruccion.setString(1, nombre.get());
+			instruccion.setString(2, apellido.get());
+			instruccion.setInt(3, edad.get());
+			instruccion.setString(4, genero.get());
+			instruccion.setDate(5, fechaIngreso);
+			instruccion.setInt(6, carrera.getCodigoCarrera());
+			instruccion.setInt(7, centroEstudio.getCodigocentro());
+
+			//Ejecutar
+			instruccion.executeUpdate();//La cantidad de registros afectados al realizar la inserción 1 si es correcta 0 si es incorrecta la insercción.
+			return instruccion.executeUpdate();
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Ocurrio un error al guardar el alumno en la base de datos");
+			e.printStackTrace();
+			return 0;
+		}
 		
 	}
 	
-	public void actualizarRegistro() {
-		
+	public int actualizarRegistro(Connection connection) {
+		try {
+			PreparedStatement instruccion = connection.prepareStatement("UPDATE tbl_alumnos SET  nombre=?, apellido=?, edad=?, genero=?, fecha_ingreso=?, codigo_carrera=?, codigo_centro=? WHERE codigo_alumno = ?");
+			
+			//Elementos parametrizados
+			instruccion.setString(1, nombre.get());
+			instruccion.setString(2, apellido.get());
+			instruccion.setInt(3, edad.get());
+			instruccion.setString(4, genero.get());
+			instruccion.setDate(5, fechaIngreso);
+			instruccion.setInt(6, carrera.getCodigoCarrera());
+			instruccion.setInt(7, centroEstudio.getCodigocentro());
+			instruccion.setInt(8, codigoAlumno.get());
+			
+			//Ejecutar
+			instruccion.executeUpdate();//La cantidad de registros afectados al realizar la inserción 1 si es correcta 0 si es incorrecta la insercción.
+			return instruccion.executeUpdate();
+		 
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Ocurrio un error al editar el alumno en la base de datos");
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
-	public void eliminarRegistro() {
-		
+	public int eliminarRegistro(Connection connection) {
+		try {
+			PreparedStatement instruccion = connection.prepareStatement("DELETE FROM tbl_alumnos WHERE codigo_alumno = ?");
+			instruccion.setInt(1, codigoAlumno.get());
+			return instruccion.executeUpdate();
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Ocurrio un error al eliminar el alumno en la base de datos");
+			e.printStackTrace();
+			return 0;
+		}
 	}
+	
 	public static void llenarInformacionAlumnos(Connection connection, ObservableList<Alumno> lista){
 		try {
-			Statement instruccion = connection.createStatement();
+			Statement instruccion = connection.createStatement();//Statement no sirve cuando hay que mandar datos por parametros para un insert
 			ResultSet resultado = instruccion.executeQuery("SELECT A.codigo_alumno, A.nombre, A.apellido, A.edad, A.genero, A.fecha_ingreso, A.codigo_carrera, A.codigo_centro, B.nombre_carrera, B.cantidad_asignaturas, C.nombre_estudio FROM tbl_alumnos A INNER JOIN tbl_carerras B ON(A.codigo_carrera = B.codigo_carrera) INNER JOIN tbl_centros_estudio C ON (A.codigo_centro = C.codigo_centro)");
 			while(resultado.next()) {
 				lista.add(
@@ -138,7 +193,6 @@ CentroEstudio centroEstudio, Carrera carrera) {
 			}
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

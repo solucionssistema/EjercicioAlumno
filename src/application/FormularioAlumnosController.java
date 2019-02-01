@@ -10,6 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -113,37 +115,76 @@ public class FormularioAlumnosController implements Initializable{
 					@Override
 					public void changed(ObservableValue<? extends Alumno> observable,
 							Alumno valorAnterior, Alumno valorSeleccionado) {
-						    
-						    txtCodigo.setText(String.valueOf(valorSeleccionado.getCodigoAlumno()));
-							txtNombre.setText(valorSeleccionado.getNombre());
-							txtApellido.setText(valorSeleccionado.getApellido());
-						    txtEdad.setText(String.valueOf(valorSeleccionado.getEdad()));
-						    
-						    if(valorSeleccionado.getGenero().equals("F")) {
-						    	rbtFemenino.setSelected(true);
-						    	rbtMasculino.setSelected(false);
-						    }else {
-						    	
-						    	if(valorSeleccionado.getGenero().equals("M")) {
-							    	rbtFemenino.setSelected(false);
-							    	rbtMasculino.setSelected(true);
-							    }
-							    
-						    } 
-						    
-						    dtpkrFecha.setValue(valorSeleccionado.getFechaIngreso().toLocalDate());
-						    cmbCarrera.setValue(valorSeleccionado.getCarrera());//En la clase alumno el método getCarrera trae un objeto de tipo carrera
-						    cmbCentroEstudio.setValue(valorSeleccionado.getCentroEstudio());
-						    
-						    btnGuardar.setDisable(true);
-						    btnEliminar.setDisable(false);
-						    btnActualizar.setDisable(false);
-						   //System.out.println("Nombre alumno seleccionado: " + valorSeleccionado.getNombre());
+						    if(valorSeleccionado!=null) {
+								    txtCodigo.setText(String.valueOf(valorSeleccionado.getCodigoAlumno()));
+									txtNombre.setText(valorSeleccionado.getNombre());
+									txtApellido.setText(valorSeleccionado.getApellido());
+								    txtEdad.setText(String.valueOf(valorSeleccionado.getEdad()));
+								    
+								    if(valorSeleccionado.getGenero().equals("F")) {
+								    	rbtFemenino.setSelected(true);
+								    	rbtMasculino.setSelected(false);
+								    }else {
+								    	
+								    	if(valorSeleccionado.getGenero().equals("M")) {
+									    	rbtFemenino.setSelected(false);
+									    	rbtMasculino.setSelected(true);
+									    }
+									    
+								    } 
+								    
+								    dtpkrFecha.setValue(valorSeleccionado.getFechaIngreso().toLocalDate());
+								    cmbCarrera.setValue(valorSeleccionado.getCarrera());//En la clase alumno el método getCarrera trae un objeto de tipo carrera
+								    cmbCentroEstudio.setValue(valorSeleccionado.getCentroEstudio());
+								    
+								    btnGuardar.setDisable(true);
+								    btnEliminar.setDisable(false);
+								    btnActualizar.setDisable(false);
+								   //System.out.println("Nombre alumno seleccionado: " + valorSeleccionado.getNombre());
+						    }
 						
 						}
 					
 		});
 	}
+	
+	@FXML //Lo va a llamar el botón guardar.
+	public void guardarRegistro() {
+		
+		//Crear nueva instancia del tipo Alumno
+		Alumno a = new Alumno(0, txtNombre.getText(), txtApellido.getText(), Integer.valueOf(txtEdad.getText()), rbtFemenino.isSelected()?"F":"M",Date.valueOf(dtpkrFecha.getValue()),cmbCentroEstudio.getSelectionModel().getSelectedItem(),cmbCarrera.getSelectionModel().getSelectedItem());
+		conexion.establecerConexion();
+		//Llamar al método guardarRegistro de la clase Alumno
+		int resultadoGuardar = a.guardarRegistro(conexion.getConnection());
+		conexion.cerrarConexion();
+		
+		if(resultadoGuardar == 1) {
+			listaAlumnos.add(a);
+			Alert mensaje = new Alert(AlertType.INFORMATION);
+			mensaje.setTitle("Registro agregado");
+			mensaje.setContentText("El registro a sido agregado exitosamente.");
+			mensaje.setHeaderText("Resultado:");
+			mensaje.show();
+		}
+	
+	}
+	
+	@FXML
+	public void actualziarRegistro() {
+		Alumno a = new Alumno(Integer.valueOf(txtCodigo.getText()), txtNombre.getText(), txtApellido.getText(), Integer.valueOf(txtEdad.getText()), rbtFemenino.isSelected()?"F":"M",Date.valueOf(dtpkrFecha.getValue()),cmbCentroEstudio.getSelectionModel().getSelectedItem(),cmbCarrera.getSelectionModel().getSelectedItem());
+		conexion.establecerConexion();
+		int resultadoGuardar =a.actualizarRegistro(conexion.getConnection());
+        conexion.cerrarConexion();
+		if(resultadoGuardar == 1) {
+			listaAlumnos.set(tblViewAlumnos.getSelectionModel().getSelectedIndex(),a);
+			Alert mensaje = new Alert(AlertType.INFORMATION);
+			mensaje.setTitle("Registro actualizado");
+			mensaje.setContentText("El registro a sido actualizado exitosamente.");
+			mensaje.setHeaderText("Resultado:");
+			mensaje.show();
+		}
+	}
+	
 	
 	@FXML
 	public void limpiarComponentes() {
@@ -163,4 +204,21 @@ public class FormularioAlumnosController implements Initializable{
 		
 	}
 	
+
+	@FXML
+	public void eliminarRegistro() {
+		conexion.establecerConexion();
+		int resultadoBorrar = tblViewAlumnos.getSelectionModel().getSelectedItem().eliminarRegistro(conexion.getConnection());
+		conexion.cerrarConexion();
+		if(resultadoBorrar == 1) {
+			listaAlumnos.remove(tblViewAlumnos.getSelectionModel().getSelectedIndex());
+			Alert mensaje = new Alert(AlertType.INFORMATION);
+			mensaje.setTitle("Registro eliminado");
+			mensaje.setContentText("El registro a sido eliminado exitosamente.");
+			mensaje.setHeaderText("Resultado:");
+			mensaje.show();
+		}
+	}
+	
 } 
+
