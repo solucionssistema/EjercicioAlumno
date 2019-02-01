@@ -79,47 +79,47 @@
                               <Insets right="5.0" />
                            </padding>
                         </Label>
-                        <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextArea fx:id="txtNombre" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </GridPane.margin>
                         </TextArea>
-                        <TextArea maxWidth="-Infinity" prefHeight="53.0" prefWidth="80.0" GridPane.columnIndex="1">
+                        <TextArea fx:id="txtCodigo" maxWidth="-Infinity" prefHeight="53.0" prefWidth="80.0" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </GridPane.margin>
                         </TextArea>
-                        <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <TextArea fx:id="txtApellido" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </GridPane.margin>
                         </TextArea>
-                        <TextArea maxWidth="-Infinity" prefHeight="52.0" prefWidth="55.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <TextArea fx:id="txtEdad" maxWidth="-Infinity" prefHeight="52.0" prefWidth="55.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </GridPane.margin>
                         </TextArea>
                         <ComboBox fx:id="cmbCarrera" prefHeight="26.0" prefWidth="192.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <ComboBox fx:id="cmbCentroEstudio" prefHeight="26.0" prefWidth="193.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <DatePicker fx:id="dtpkrFecha" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <HBox minWidth="-Infinity" prefHeight="44.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
-                              <RadioButton mnemonicParsing="false" text="Femenino">
+                              <RadioButton fx:id="rbtFemenino" mnemonicParsing="false" text="Femenino">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="GrupoGenero" />
                                  </toggleGroup>
                               </RadioButton>
-                              <RadioButton mnemonicParsing="false" text="Masculino" toggleGroup="$GrupoGenero" />
+                              <RadioButton fx:id="rbtMasculino" mnemonicParsing="false" text="Masculino" toggleGroup="$GrupoGenero" />
                            </children>
                         </HBox>
                      </children>
                   </GridPane>
                   <HBox layoutX="74.0" layoutY="379.0" prefHeight="26.0" prefWidth="310.0" spacing="5.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Guardar" />
-                        <Button mnemonicParsing="false" text="Actualizar" />
-                        <Button mnemonicParsing="false" text="Eliminar" />
-                        <Button mnemonicParsing="false" text="Nuevo" />
+                        <Button fx:id="btnGuardar" mnemonicParsing="false" text="Guardar" />
+                        <Button fx:id="btnActualizar" disable="true" mnemonicParsing="false" text="Actualizar" />
+                        <Button fx:id="btnEliminar" disable="true" mnemonicParsing="false" text="Eliminar" />
+                        <Button mnemonicParsing="false" onAction="#limpiarComponentes" text="Nuevo" />
                      </children>
                   </HBox>
                </children>

@@ -4,13 +4,19 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import modelo.Alumno;
 import modelo.Carrera;
@@ -28,6 +34,15 @@ public class FormularioAlumnosController implements Initializable{
 	@FXML private TableColumn<Alumno,Carrera> clmncarrera;
 	
 	//SE ENLAZAN CON LA VISTA INTERFAZ GRÁFICA DE USUARIO GUI
+	@FXML private TextArea txtCodigo;
+	@FXML private TextArea txtNombre;
+	@FXML private TextArea txtApellido;
+	@FXML private TextArea txtEdad;
+	@FXML private RadioButton rbtFemenino;
+	@FXML private RadioButton rbtMasculino;
+	@FXML private DatePicker dtpkrFecha;
+	
+	
 	@FXML private ComboBox<Carrera> cmbCarrera;
 	@FXML private ComboBox<CentroEstudio>  cmbCentroEstudio;
 	
@@ -40,6 +55,12 @@ public class FormularioAlumnosController implements Initializable{
 	@FXML private TableColumn<Alumno, Date> clmnFechaIngreso;
 	@FXML private TableColumn<Alumno, String> clmnCarrera;
 	@FXML private TableColumn<Alumno, String> clmnCentroEstudio;
+	@FXML private Button btnGuardar;
+	@FXML private Button btnEliminar;
+	@FXML private Button btnActualizar;
+	
+	
+	
 	
 	//Colecciones de datos
 	private ObservableList<Carrera> listaCarreras;//Al utilizar ObservableList cualquier cambio se veria reflejado automáticamente en el cmbox
@@ -78,11 +99,68 @@ public class FormularioAlumnosController implements Initializable{
 		clmnfechaIngreso.setCellValueFactory(new PropertyValueFactory<Alumno,Date>("fechaIngreso"));
 		clmncentroEstudio.setCellValueFactory(new PropertyValueFactory<Alumno,CentroEstudio>("centroEstudio"));
 		clmncarrera.setCellValueFactory(new PropertyValueFactory<Alumno,Carrera>("carrera"));
-		
+		gestionarEventos();
 		
 		
 		conexion.cerrarConexion();//Nunca dejar una conexión abierta
 	}
 	
+	
+	public void gestionarEventos(){
+		tblViewAlumnos.getSelectionModel().selectedItemProperty().addListener(
+				new ChangeListener<Alumno>() {
+
+					@Override
+					public void changed(ObservableValue<? extends Alumno> observable,
+							Alumno valorAnterior, Alumno valorSeleccionado) {
+						    
+						    txtCodigo.setText(String.valueOf(valorSeleccionado.getCodigoAlumno()));
+							txtNombre.setText(valorSeleccionado.getNombre());
+							txtApellido.setText(valorSeleccionado.getApellido());
+						    txtEdad.setText(String.valueOf(valorSeleccionado.getEdad()));
+						    
+						    if(valorSeleccionado.getGenero().equals("F")) {
+						    	rbtFemenino.setSelected(true);
+						    	rbtMasculino.setSelected(false);
+						    }else {
+						    	
+						    	if(valorSeleccionado.getGenero().equals("M")) {
+							    	rbtFemenino.setSelected(false);
+							    	rbtMasculino.setSelected(true);
+							    }
+							    
+						    } 
+						    
+						    dtpkrFecha.setValue(valorSeleccionado.getFechaIngreso().toLocalDate());
+						    cmbCarrera.setValue(valorSeleccionado.getCarrera());//En la clase alumno el método getCarrera trae un objeto de tipo carrera
+						    cmbCentroEstudio.setValue(valorSeleccionado.getCentroEstudio());
+						    
+						    btnGuardar.setDisable(true);
+						    btnEliminar.setDisable(false);
+						    btnActualizar.setDisable(false);
+						   //System.out.println("Nombre alumno seleccionado: " + valorSeleccionado.getNombre());
+						
+						}
+					
+		});
+	}
+	
+	@FXML
+	public void limpiarComponentes() {
+		txtCodigo.setText(null);
+		txtNombre.setText(null);
+		txtApellido.setText(null);
+		txtEdad.setText(null);
+		rbtFemenino.setSelected(false);
+		rbtMasculino.setSelected(false);
+		dtpkrFecha.setValue(null);
+		cmbCarrera.setValue(null);
+		cmbCentroEstudio.setValue(null);
+		
+		btnGuardar.setDisable(false);
+		btnEliminar.setDisable(true);
+		btnActualizar.setDisable(true);
+		
+	}
 	
 } 
